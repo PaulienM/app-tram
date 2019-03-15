@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+.ant-layout-header .logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255,255,255,.2);
+  margin: 16px 24px 16px 0;
+  float: left;
+}
+
+body {
+  background-color: #f0f2f5 !important;
+}
+
+h1, h2, p {
+  font-family: 'Montserrat';
+}
+
+#line-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#filter {
+  margin: 2em 0 2em 0;
+}
+
+.line {
+  margin: 0.5em;
+}
+
+.line-list > button {
+  background: none repeat scroll 0 0 transparent;
+  border: medium none;
+  border-spacing: 0;
+  color: #26589F;
+  font-family: 'PT Sans Narrow',sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.42rem;
+  list-style: none outside none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  text-decoration: none;
+  text-indent: 0;
+}
+
+.line-list > button {
+  text-align: center;
+  border-radius: 50%;
+  width: 2em;
+  height: 2em;
+  margin: 1em;
+}
+
+.chatbot h2 {
+  color: white;
+}
+
+.rsc-content a {
+   background-color: #3f8fb0;
+ }
+
+.rsc-container a:hover {
+  color: #fff;
+}
+
+.ant-tabs-nav-wrap {
+  height: 3em;
+}
