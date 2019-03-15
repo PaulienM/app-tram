@@ -5,8 +5,8 @@ import { sort } from '../algorithm.js';
 import { Icon, Button, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux'
-import chooseLineAction from '../Store/Reducers/reducer'
-import chooseStopAction from '../Store/Reducers/reducer'
+import { chooseLineAction } from '../Store/Reducers/reducer'
+import { chooseStopAction } from '../Store/Reducers/reducer'
 import { changeTabAction } from '../Store/Reducers/reducer'
 
 
@@ -110,7 +110,7 @@ const LinesByType = (props) => {
   return (
     <div className="line-list">
       <h2>{props.type}</h2>
-      { props.lines.map(line => <Line line={line} key={line.id} /> )}
+      { props.lines.map(line => <ConnectedLine line={line} key={line.id} /> )}
     </div>
   )
 }
@@ -121,7 +121,7 @@ class Line extends Component {
       <Button
         style={{ backgroundColor: "#"+this.props.line.color,
         color: "#"+this.props.line.textColor }}
-        onClick={this.props.chooseNewLine(this.props.line)}
+        onClick={() => this.props.chooseNewLine(this.props.line)}
       >
         {this.props.line.shortName}
       </Button>
@@ -135,15 +135,9 @@ const mapDispatchToProps = (dispatch) => {
     return({
         chooseNewLine: function(line) {
           dispatch(chooseLineAction(line))
-        },
-        chooseNewStop: function(stop) {
-          dispatch(chooseStopAction(stop))
-        },
-        changeTabs: function(tab) {
-          dispatch(changeTabAction(tab))
         }
     })
 }
 
-const connectedLine = connect(null, mapDispatchToProps)(Line)
+const ConnectedLine = connect(null, mapDispatchToProps)(Line)
 export default LinesList
