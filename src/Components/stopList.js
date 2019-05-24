@@ -1,62 +1,44 @@
 import React, { Component } from 'react';
 import '../style.css';
-import { getStopByLine } from '../API/APITag';
 import { connect } from 'react-redux'
-import chooseLineAction from '../Store/Reducers/reducer'
-import chooseStopAction from '../Store/Reducers/reducer'
-import { changeTabAction } from '../Store/Reducers/reducer'
+import { asyncCallStop } from '../Store/Reducers/callAPI'
+import { changeTabAction } from '../Store/Reducers/changeTab'
+import Store from '../Store/configureStore'
 
 class StopList extends Component {
-  constructor() {
-    super()
-    this.state = {
-      stop: {}
-    }
-  }
-
-  _getAllStopByLineId = (lineId) => {
-    getStopByLine(lineId).then(data => {
-      this.setState({ stop: data[0].arrets })
-    })
-  }
-
-  componentDidMount() {
-    this._getAllStopByLineId(this.props.lineId)
-  }
-
   render() {
     return(
       <div id="stop-list">
         <h1>Tous les arrets de la ligne</h1>
-        { Object.keys(this.state.stop).map(x => <Stop stop={this.state.stop[x]} key={this.state.stop[x].stopId} />) }
+        { Object.keys(this.props.stop).map(x => <ConnectedStop stop={this.props.stop[x]} key={this.props.stop[x].stopId} />) }
       </div>
     )
   }
 }
 
-const Stop = (props) => {
-  return(
-    <div>
-      <p>{ props.stop.parentStation.name } ({ props.stop.stopId })</p>
-    </div>
-  )
+class Stop extends Component {
+  render() {
+    return(
+      <div onClick={() => {
+        Store.dispatch(asyncCallStop(this.props.stop.stopId))
+        this.props.changeTabs("3")
+      }}>
+        <p>{ this.props.stop.parentStation.name } ({ this.props.stop.stopId })</p>
+      </div>
+    )
+  }
 }
 
-const mapStateToProps = (state) => ({line: state.line, stop: state.stop, tab: state.tab})
+const mapStateToProps = (state) => ({stop: state.API.stopList[0].arrets})
 
 const mapDispatchToProps = (dispatch) => {
     return({
-        chooseNewLine: function(line) {
-          dispatch(chooseLineAction(line))
-        },
-        chooseNewStop: function(stop) {
-          dispatch(chooseStopAction(stop))
-        },
         changeTabs: function(tab) {
           dispatch(changeTabAction(tab))
         }
     })
 }
 
-const connectedStopList = connect(mapStateToProps, mapDispatchToProps)(StopList)
-export { connectedStopList as StopList }
+const ConnectedStop = connect(null, mapDispatchToProps)(Stop)
+const ConnectedStopList = connect(mapStateToProps, mapDispatchToProps)(StopList)
+export { ConnectedStopList as StopList }

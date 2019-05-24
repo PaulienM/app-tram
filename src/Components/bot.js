@@ -28,9 +28,10 @@ const theme = {
 export class Bot extends Component {
   constructor() {
     super();
-    this.state = {
-    };
+    this.state = {};
   }
+
+
 
   render() {
     return (

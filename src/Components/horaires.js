@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import '../style.css';
 import { LinesList } from './linesList';
-import { StopList } from './stopList.js';
-import { ScheduleList } from './schedule.js';
+import { StopList } from './stopList';
+import { ScheduleList } from './schedule';
+import { Loading } from './Loading';
 import { Tabs } from 'antd';
 import { connect } from 'react-redux'
-import chooseLineAction from '../Store/Reducers/reducer'
-import chooseStopAction from '../Store/Reducers/reducer'
-import { changeTabAction } from '../Store/Reducers/reducer'
+import { changeTabAction } from '../Store/Reducers/changeTab'
 
 const TabPane = Tabs.TabPane;
 
@@ -27,7 +26,6 @@ class Horaires extends Component {
   }
 
   render() {
-    console.log(this.props.tab)
     return (
       <Tabs activeKey={this.props.tab} onChange={this.onChange}>
 
@@ -35,19 +33,19 @@ class Horaires extends Component {
           <LinesList/>
         </TabPane>
 
-        { this.state.lineId === undefined
+        { this.props.API.line === undefined
           ? <TabPane tab="Choix de l'arret" disabled key="2">
             </TabPane>
           : <TabPane tab="Choix de l'arret" key="2">
-              <StopList lineId={ this.state.lineId } />
+              { this.props.API.stopLoading ? <Loading/> : <StopList lineId={ this.state.lineId } /> }
             </TabPane>
         }
 
-        { this.state.stopId === undefined || this.state.lineId === undefined
+        { this.props.API.line === undefined || this.props.API.stop === undefined
           ? <TabPane tab="Horaires" disabled key="3">
               </TabPane>
           : <TabPane tab="Horaires" key="3">
-              <ScheduleList lineId={ this.state.lineId } stopId={ this.state.stopId }/>
+              { this.props.API.schedulesLoading ? <Loading/> : <ScheduleList lineId={ this.state.lineId } stopId={ this.state.stopId }/> }
             </TabPane>
         }
 
@@ -56,16 +54,10 @@ class Horaires extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({line: state.line, stop: state.stop, tab: state.tab})
+const mapStateToProps = (state) => ({tab: state.tabs, API: state.API})
 
 const mapDispatchToProps = (dispatch) => {
     return({
-        chooseNewLine: function(line) {
-          dispatch(chooseLineAction(line))
-        },
-        chooseNewStop: function(stop) {
-          dispatch(chooseStopAction(stop))
-        },
         changeTabs: function(tab) {
           dispatch(changeTabAction(tab))
         }

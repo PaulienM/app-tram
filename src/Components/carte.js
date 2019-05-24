@@ -28,7 +28,7 @@ export class Carte extends Component {
 
   render() {
     return (
-      <Wrapper width="1280px" height="720px" id="map" />
+      <Wrapper width="max-width" height="85vh" id="map" />
     )
   }
 }

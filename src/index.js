@@ -31,7 +31,6 @@ class App extends Component {
     this.setState({
       tabs: tabs
     })
-    console.log(tabs)
   }
 
 
@@ -58,7 +57,7 @@ class App extends Component {
 
 
 
-          <Content style={{ padding: '0 50px', backgroundColor: 'white'}}>
+          <Content style={{ padding: '0', backgroundColor: 'white'}}>
             {this.state.tabs === 1 ? <Horaires /> : false}
             {this.state.tabs === 2 ? <Carte /> : false}
           </Content>

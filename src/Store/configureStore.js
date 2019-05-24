@@ -1,6 +1,10 @@
-import { createStore } from 'redux'
-import selectParams from './Reducers/reducer'
+import { createStore, applyMiddleware } from 'redux'
+import thunk from 'redux-thunk'
+import rootReducer from './Reducers/rootReducer'
 
-const Store = createStore(selectParams)
+const Store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+)
 
 export default Store;

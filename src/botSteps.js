@@ -1,4 +1,5 @@
-import { StopListBot } from './Components/stopListBot'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 const hello = {
   id: 'hello',
@@ -10,7 +11,7 @@ const actionOpt = {
   id: 'actionOpt',
   options: [
     { value: 1, label: 'Connaitre les horaires de mes favoris', trigger: 'otherAction' },
-    { value: 2, label: 'Avoir les horaires de mon tram', trigger: 'whichStop' },
+    { value: 2, label: 'Avoir les horaires de mon tram', trigger: 'whichLine' },
     { value: 3, label: 'Gérer mes favoris', trigger: '3' },
   ],
 }
@@ -48,6 +49,18 @@ const newHello = {
   trigger: 'actionOpt',
 }
 
+const whichLine = {
+  id: 'whichLine',
+  message: "De quel ligne souhaitez vous connaitre les horaires ?",
+  trigger: 'askLine'
+}
+
+const askLine = {
+  id: 'askLine',
+  user: true,
+  trigger: 'whichStop'
+}
+
 const whichStop = {
   id: 'whichStop',
   message: "Quel est le nom de votre arret ?",
@@ -57,7 +70,14 @@ const whichStop = {
 const askStop = {
   id: 'askStop',
   user: true,
-  trigger: '3'
+  trigger: 'horaires'
+}
+
+const horaires = {
+  id: 'horaires',
+  component: <Horaires/>,
+  asMessage: true,
+  trigger: 'otherAction'
 }
 
 
@@ -74,8 +94,48 @@ export const steps = [
   goodbye,
   needYouOpt,
   newHello,
+  askLine,
+  whichLine,
   askStop,
-  whichStop
+  whichStop,
+  horaires
 ]
 
 export default steps;
+
+class Horaires extends Component {
+  constructor() {
+    super()
+    this.state = {
+      line: '',
+      stop: ''
+    }
+  }
+
+  /*componentWillMount() {
+    const { steps } = this.props;
+    const { askLine, askStop } = steps;
+
+    this.setState({ askLine, askStop });
+  }*/
+
+  render() {
+    /*const { askLine, askStop } = this.state;
+    console.log(this.state.askLine.value)
+    console.log(this.state.askStop.value)*/
+    return(
+      <div style={{ width: '100%' }}>
+        <h3>Summary</h3>
+      </div>
+    )
+  }
+}
+
+
+Horaires.propTypes = {
+  steps: PropTypes.object,
+};
+
+Horaires.defaultProps = {
+  steps: undefined,
+};

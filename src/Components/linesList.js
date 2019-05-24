@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import '../style.css';
 import { getAllLines } from '../API/APITag';
 import { sort } from '../algorithm.js';
-import { Icon, Button, Checkbox } from 'antd';
+import { Button, Checkbox } from 'antd';
 import 'antd/dist/antd.css';
 import { connect } from 'react-redux'
-import { chooseLineAction } from '../Store/Reducers/reducer'
-import { chooseStopAction } from '../Store/Reducers/reducer'
-import { changeTabAction } from '../Store/Reducers/reducer'
+import { asyncCallLine } from '../Store/Reducers/callAPI'
+import { changeTabAction } from '../Store/Reducers/changeTab'
+import Store from '../Store/configureStore'
 
 
 export class LinesList extends Component {
@@ -78,31 +78,6 @@ export class LinesList extends Component {
         { (this.state.deselectedTypes.indexOf('FLEXO') === -1) ? <LinesByType type="FLEXO" lines={this.state.flexo}/> : false}
       </div>
     );
-    /*return (
-      <div style={{ width: 256 }}>
-        <Menu
-          onClick={this.handleClick}
-          style={{ width: 256 }}
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
-          mode="inline"
-          inlineCollapsed={false}
-        >
-          <SubMenu key="sub1" title={<span><Icon type="appstore" /><span> Tram</span></span>}>
-            { this.state.tram.map(line => <Line line={line} key={line.id} props={this.props}/> )}
-          </SubMenu>
-          <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Chrono</span></span>}>
-            { this.state.chrono.map(line => <Line line={line} key={line.id} props={this.props}/> )}
-          </SubMenu>
-          <SubMenu key="sub3" title={<span><Icon type="setting" /><span>Proximo</span></span>}>
-            { this.state.proximo.map(line => <Line line={line} key={line.id} props={this.props}/> )}
-          </SubMenu>
-          <SubMenu key="sub4" title={<span><Icon type="setting" /><span>Flexo</span></span>}>
-            { this.state.flexo.map(line => <Line line={line} key={line.id} props={this.props}/> )}
-          </SubMenu>
-        </Menu>
-      </div>
-    )*/
   }
 }
 
@@ -121,7 +96,10 @@ class Line extends Component {
       <Button
         style={{ backgroundColor: "#"+this.props.line.color,
         color: "#"+this.props.line.textColor }}
-        onClick={() => this.props.chooseNewLine(this.props.line)}
+        onClick={() => {
+          Store.dispatch(asyncCallLine(this.props.line))
+          this.props.changeTab("2")
+        }}
       >
         {this.props.line.shortName}
       </Button>
@@ -129,12 +107,10 @@ class Line extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({line: state.line, stop: state.stop, tab: state.tab})
-
 const mapDispatchToProps = (dispatch) => {
     return({
-        chooseNewLine: function(line) {
-          dispatch(chooseLineAction(line))
+        changeTab: function() {
+          dispatch(changeTabAction("2"))
         }
     })
 }

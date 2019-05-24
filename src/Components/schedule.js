@@ -2,19 +2,13 @@ import React, { Component } from 'react';
 import '../style.css';
 import { getScheduleByStop } from '../API/APITag';
 import { sort } from '../algorithm.js';
-import { Icon } from 'antd';
 import { connect } from 'react-redux'
-import chooseLineAction from '../Store/Reducers/reducer'
-import chooseStopAction from '../Store/Reducers/reducer'
-import { changeTabAction } from '../Store/Reducers/reducer'
 
 class ScheduleList extends Component {
   constructor() {
     super()
     this.state = {
-      schedules: {},
-      schedulesList: [],
-      isLoaded: false
+      schedulesList: []
     }
   }
 
@@ -68,51 +62,36 @@ class ScheduleList extends Component {
   }
 
   componentDidMount() {
-    this._loadSchedule(this.props.stopId)
+    this._getScheculeList(this.props.schedules)
   }
 
   render() {
-    if(!this.state.isLoaded) {
-      return (
-        <div style={{ textAlign: 'center', margin: '4em'}} >
-          <Icon type="loading"/>
-        </div>
-      )
-    } else {
-      return (
-        <div id="schedule-list">
-          <h1>Temps d'arrivée</h1>
-          <h2>Direction : { this.state.schedules[0].pattern.desc }</h2>
-          {this.state.schedulesList.map(x => <Schedule schedule={x} key={x.tripId}/>)}
-        </div>
-      )
-    }
+    return (
+      <div id="schedule-list">
+        <h1>Temps d'arrivée</h1>
+        {this.props.schedules.filter(x => x.pattern.id.indexOf(this.props.line) !== -1).map(schedules => {
+          return(
+            <>
+              <h2>Direction : { schedules.pattern.desc }</h2>
+              {schedules.times.map(x => <Schedule schedule={x.formattedTime} key={x.tripId}/>)}
+            </>
+        )})}
+
+
+      </div>
+    )
   }
 }
 
 const Schedule = (props) => {
   return(
     <div>
-      <p>{props.schedule.formattedTime}</p>
+      <p>{props.schedule}</p>
     </div>
   )
 }
 
-const mapStateToProps = (state) => ({line: state.line, stop: state.stop, tab: state.tab})
+const mapStateToProps = (state) => ({schedules: state.API.schedules, line: state.API.line})
 
-const mapDispatchToProps = (dispatch) => {
-    return({
-        chooseNewLine: function(line) {
-          dispatch(chooseLineAction(line))
-        },
-        chooseNewStop: function(stop) {
-          dispatch(chooseStopAction(stop))
-        },
-        changeTabs: function(tab) {
-          dispatch(changeTabAction(tab))
-        }
-    })
-}
-
-const connectedScheduleList = connect(mapStateToProps, mapDispatchToProps)(ScheduleList)
+const connectedScheduleList = connect(mapStateToProps, null)(ScheduleList)
 export { connectedScheduleList as ScheduleList }

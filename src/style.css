@@ -69,3 +69,7 @@ h1, h2, p {
 .ant-tabs-nav-wrap {
   height: 3em;
 }
+
+.ant-tabs {
+  margin: 0 50px !important;
+}
